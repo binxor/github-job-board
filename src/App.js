@@ -7,14 +7,14 @@ function App () {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
+        <p className="App-logo">
           GitHub Job Board
-          </p>
-        <div class="lightfont">
-          These job postings are active on <a href="https://jobs.github.com">github.com</a>.  
-        </div>
+        </p>
       </header>
       <Container></Container>
+      <div className="lightfont">
+        These job postings are active on <a href="https://jobs.github.com">github.com</a>.  
+      </div>
     </div>
   );
 }

@@ -12,7 +12,7 @@ class Post extends React.Component {
 
   render () {
     return (
-      <div className="postercard">
+      <div className="postercard" id={this.props.item.id}>
         <h6 className="postertitle">{this.props.item.title}</h6>
         <h6 className="postersubtitle">{this.props.item.company}</h6>
         <br/>

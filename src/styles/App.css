@@ -5,7 +5,9 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  /* height: 40vmin; */
+  font-size: 44px;
+  margin-bottom: 10px;
 }
 
 .App-header {
@@ -27,6 +29,6 @@
 }
 
 .lightfont {
-  font-size: 0.8em;
+  font-size: 1.2em;
   font-weight: 320;
 }
