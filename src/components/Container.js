@@ -44,11 +44,8 @@ class Container extends React.Component {
     } else {
       return (
         <>
-        {/* <Post className="poster" item={items[0]}></Post>
-        <Post className="poster" item={items[1]}></Post>
-        <Post className="poster" item={items[2]}></Post> */}
           {items.map(item => (
-            <Post className="poster" item={item}></Post>
+            <Post key={item.id} item={item}></Post>
           ))}
         </>
       );
