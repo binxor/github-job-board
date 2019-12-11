@@ -1,8 +1,15 @@
+.dropdown {
+  font-size: 1em;
+  margin-left: 10px;
+  background-color: #404753;
+  color: #fff;
+  border-color: yellowgreen;
+}
+
 .sortbutton {
-  margin: 5px;
-  /* padding: 5px 5px 10px 5px; */
+  margin: -5px 5px 0px 5px;
+  height: 32px;
   display: inline-block;
-  margin-bottom: 0;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -12,7 +19,7 @@
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
-  padding: 6px 12px;
+  padding: 3px 12px 6px 12px;
   font-size: 18px;
   line-height: 1.42857143;
   border-radius: 4px;

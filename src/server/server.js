@@ -10,7 +10,6 @@ const ARGS = minimist(process.argv.slice(2));
 const TESTDATA = require('../data/https/jobs.github.com/positions/?search/remote.json');
 const TEST = ARGS['test'] ? true : false;
 
-// TODO - reenable Github API when done with testing
 const getData = async () => {
   if(TEST) {
     return await Promise.resolve(TESTDATA);

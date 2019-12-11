@@ -10,20 +10,21 @@ class Container extends React.Component {
       error: null,
       isLoaded: false,
       items: [],
-      sorter: '',
+      sorter: 'title',
       sortOrder: 'asc',
       sortedItems: [],
       sortItems: (ele) => {
-        let reverse;
-        if (this.state.sorter === ele.target.name) {
-          reverse = this.state.sortOrder === 'desc' ? 'asc' : 'desc';
-        } else {
-          reverse = 'asc';
-        }
-        let sortedItems = _.orderBy(this.state.items, ele.target.name, reverse).map((item) => {
+        let sortedItems = _.orderBy(this.state.items, ele.target.value, this.state.sortOrder).map((item) => {
           return <Post key={item.id} item={item}></Post>
         });
-        this.setState({ ...this.state, sorter: ele.target.name, sortedItems: sortedItems, sortOrder: reverse })
+        this.setState({ ...this.state, sorter: ele.target.value, sortedItems: sortedItems })
+      },
+      flipItems: () => {
+        let reverse = (this.state.sortOrder === 'desc' ? 'asc' : 'desc');
+        let sortedItems = _.orderBy(this.state.items, this.state.sorter, reverse).map((item) => {
+          return <Post key={item.id} item={item}></Post>
+        });
+        this.setState({ ...this.state, sortedItems: sortedItems, sortOrder: reverse })
       }
     };
   }
@@ -54,7 +55,8 @@ class Container extends React.Component {
   }
 
   render () {
-    const { error, isLoaded } = this.state;
+    const { error, isLoaded, sortOrder } = this.state;
+    let order = sortOrder == 'asc' ? 'v' : '^';
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -64,9 +66,12 @@ class Container extends React.Component {
         <>
           <p className="sortbuttongroup">
             Sort By
-            <button className="sortbutton" onClick={this.state.sortItems} name='title'>Title</button>
-            <button className="sortbutton" onClick={this.state.sortItems} name='created_at'>Post Date</button>
-            <button className="sortbutton" onClick={this.state.sortItems} name='company'>Company</button>
+            <select className="dropdown" value={this.state.sorter} onChange={this.state.sortItems}>
+              <option value='title'>Title</option>
+              <option value='created_at'>Post Date</option>
+              <option value='company'>Company</option>
+            </select>
+            <button className='sortbutton' onClick={this.state.flipItems} name={this.state.sorter}>{order}</button>
           </p>
           {this.state.sortedItems}
         </>
