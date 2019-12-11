@@ -9,7 +9,12 @@ A real-time* visual listing of jobs posted to github.
   > `npm i`
 
 2. Start the node server.
-  > `node server/server.js`
+
+  > Using real data:
+   `node server/server.js`
+
+  > Using mock data:
+   `node server/server.js --test`
 
 
 3. Start the UI.
