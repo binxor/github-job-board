@@ -52,3 +52,12 @@
   font-weight: 200;
   font-size: 1.4em;
 }
+
+.textinput {
+  font-size: 1em;
+  margin-left: 10px;
+  margin-right: 20px;
+  background-color: #404753;
+  color: #fff;
+  border-color: yellowgreen;
+}

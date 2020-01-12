@@ -15,7 +15,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serverStart": "node ./src/server/server.js",
+    "serverStartMock": "node ./src/server/server.js --test"
   },
   "eslintConfig": {
     "extends": "react-app"

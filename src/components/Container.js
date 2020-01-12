@@ -10,21 +10,41 @@ class Container extends React.Component {
       error: null,
       isLoaded: false,
       items: [],
+      searchValue: '',
       sorter: 'title',
       sortOrder: 'asc',
-      sortedItems: [],
-      sortItems: (ele) => {
-        let sortedItems = _.orderBy(this.state.items, ele.target.value, this.state.sortOrder).map((item) => {
-          return <Post key={item.id} item={item}></Post>
+      visibleElements: [],
+      visibleItems: [],
+      search: (ele) => {
+        let value = ele.target.value;
+        let visibleItems = this.state.items;
+        if (value.length === 0) { visibleItems = this.state.items }
+        let foundItems = _.filter(visibleItems, (item) => {
+          return JSON.stringify(item).toLowerCase().includes(value.toLowerCase());
         });
-        this.setState({ ...this.state, sorter: ele.target.value, sortedItems: sortedItems })
+        let visibleElements = this.state.renderItems(foundItems);
+        this.setState({ ...this.state, visibleItems: foundItems, visibleElements: visibleElements, searchValue: value });
+        return foundItems;
       },
-      flipItems: () => {
+      sort: (ele) => {
+        let sortedItems = _.orderBy(this.state.visibleItems, ele.target.value, this.state.sortOrder);
+        let visibleElements = this.state.renderItems(sortedItems);
+        this.setState({ ...this.state, visibleItems: sortedItems, visibleElements: visibleElements, sorter: ele.target.value })
+        return sortedItems;
+      },
+      flip: () => {
         let reverse = (this.state.sortOrder === 'desc' ? 'asc' : 'desc');
-        let sortedItems = _.orderBy(this.state.items, this.state.sorter, reverse).map((item) => {
+        let flippedItems = _.orderBy(this.state.visibleItems, this.state.sorter, reverse);
+        let visibleElements = this.state.renderItems(flippedItems);
+        this.setState({ ...this.state, visibleItems: flippedItems, visibleElements: visibleElements, sortOrder: reverse })
+        return flippedItems;
+      },
+      renderItems: (items) => {
+        let visibleItems = items;
+        let visibleElements = visibleItems.map((item) => {
           return <Post key={item.id} item={item}></Post>
-        });
-        this.setState({ ...this.state, sortedItems: sortedItems, sortOrder: reverse })
+        })
+        return visibleElements;
       }
     };
   }
@@ -39,11 +59,9 @@ class Container extends React.Component {
           this.setState({
             isLoaded: true,
             items: result,
-            sortedItems: result.map((item) => {
-              return <Post key={item.id} item={item}></Post>
-            })
+            visibleElements: this.state.renderItems(_.orderBy(result,this.state.sorter, this.state.sortOrder)),
+            visibleItems: result
           });
-          console.log(result)
         },
         (error) => {
           this.setState({
@@ -65,15 +83,18 @@ class Container extends React.Component {
       return (
         <>
           <p className="sortbuttongroup">
+            Search
+            <input className="textinput" name="search" type="text" placeholder="asdfasdf" value={this.state.searchValue} onChange={this.state.search} />
             Sort By
-            <select className="dropdown" value={this.state.sorter} onChange={this.state.sortItems}>
+            <select className="dropdown" name="sort" value={this.state.sorter} onChange={this.state.sort}>
               <option value='title'>Title</option>
               <option value='created_at'>Post Date</option>
               <option value='company'>Company</option>
             </select>
-            <button className='sortbutton' onClick={this.state.flipItems} name={this.state.sorter}>{order}</button>
+            <button className='sortbutton' name="flip" onClick={this.state.flip} value={this.state.sortOrder}>{order}</button>
           </p>
-          {this.state.sortedItems}
+          <p className="sortbuttongroup"> Searched: {this.state.searchValue}     Sort: {this.state.sorter}       Order: {this.state.sortOrder}</p>
+          {this.state.visibleElements}
         </>
       );
     }
