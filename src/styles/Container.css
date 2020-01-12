@@ -1,3 +1,11 @@
+.checkbox {
+  font-size: 1em;
+  margin-left: 10px;
+  background-color: #404753;
+  color: #fff;
+  border-color: yellowgreen;
+}
+
 .dropdown {
   font-size: 1em;
   margin-left: 10px;
@@ -7,7 +15,7 @@
 }
 
 .sortbutton {
-  margin: -5px 5px 0px 5px;
+  margin: -5px 15px 0px 5px;
   height: 32px;
   display: inline-block;
   font-weight: 400;

@@ -14,6 +14,9 @@ class Post extends React.Component {
   }
 
   render () {
+    let showFullDescription = this.props.item.showFullDescription,
+      description = (this.props.item.description|| '').replace(/<[^>]+>/g, '');
+    if (showFullDescription === true) { description = description.substring(0, 150); }
     return (
       <div className="postercard" id={this.props.item.id}>
         <h6 className="postertitle">
@@ -22,7 +25,7 @@ class Post extends React.Component {
           </a>
         </h6>
         <h6 className="postersubtitle">{this.props.item.company} - {this.props.item.location}</h6>
-        <p className="posterdescription">{(this.props.item.description||'').replace(/<[^>]+>/g, '')}</p>
+        <p className="posterdescription">{description}</p>
         <h6 className="postertext">{this.props.item.created_at}</h6>
       </div>
     );

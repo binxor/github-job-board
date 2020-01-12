@@ -11,6 +11,7 @@ class Container extends React.Component {
       isLoaded: false,
       items: [],
       searchValue: '',
+      showFullDescription: false,
       sorter: 'title',
       sortOrder: 'asc',
       visibleElements: [],
@@ -25,6 +26,15 @@ class Container extends React.Component {
         let visibleElements = this.state.renderItems(foundItems);
         this.setState({ ...this.state, visibleItems: foundItems, visibleElements: visibleElements, searchValue: value });
         return foundItems;
+      },
+      shrinkDescription: () => {
+        let shrink = !this.state.showFullDescription;
+        let visibleItems = this.state.visibleItems.map((item) => {
+          item['showFullDescription'] = shrink;
+          return item;
+        });
+        let visibleElements = this.state.renderItems(visibleItems);
+        this.setState({ ...this.state, visibleItems: visibleItems, visibleElements: visibleElements, showFullDescription: shrink });
       },
       sort: (ele) => {
         let sortedItems = _.orderBy(this.state.visibleItems, ele.target.value, this.state.sortOrder);
@@ -92,8 +102,9 @@ class Container extends React.Component {
               <option value='company'>Company</option>
             </select>
             <button className='sortbutton' name="flip" onClick={this.state.flip} value={this.state.sortOrder}>{order}</button>
+            Compact
+            <input className="checkbox" type="checkbox" name="check" value={this.state.showFullDescription} onChange={this.state.shrinkDescription} />
           </p>
-          <p className="sortbuttongroup"> Searched: {this.state.searchValue}     Sort: {this.state.sorter}       Order: {this.state.sortOrder}</p>
           {this.state.visibleElements}
         </>
       );
