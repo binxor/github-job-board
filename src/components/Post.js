@@ -16,12 +16,12 @@ class Post extends React.Component {
   render () {
     let showFullDescription = this.props.item.showFullDescription,
       description = (this.props.item.description|| '').replace(/<[^>]+>/g, '');
-    if (showFullDescription === true) { description = description.substring(0, 150); }
+    if (showFullDescription === true) { description = description.substring(0, 200); }
     return (
       <div className="postercard" id={this.props.item.id}>
         <h6 className="postertitle">
           <a className="posterlink" target="_blank" href={this.props.item.url} title={this.props.item.title}>
-            {this.props.item.title}
+            {this.props.item.title} - {this.props.item.type}
           </a>
         </h6>
         <h6 className="postersubtitle">{this.props.item.company} - {this.props.item.location}</h6>

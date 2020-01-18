@@ -14,6 +14,7 @@ class Container extends React.Component {
       showFullDescription: false,
       sorter: 'title',
       sortOrder: 'asc',
+      type: '',
       visibleElements: [],
       visibleItems: [],
       search: (ele) => {
@@ -24,7 +25,20 @@ class Container extends React.Component {
           return JSON.stringify(item).toLowerCase().includes(value.toLowerCase());
         });
         let visibleElements = this.state.renderItems(foundItems);
-        this.setState({ ...this.state, visibleItems: foundItems, visibleElements: visibleElements, searchValue: value });
+        this.setState({ ...this.state, visibleItems: foundItems, visibleElements: visibleElements, searchValue: value, type: ''  });
+        return foundItems;
+      },
+      searchType: (ele) => {
+        let value = ele.target.value;
+        let visibleItems = this.state.search({target:{value:this.state.searchValue}});
+        let foundItems = visibleItems;
+        if (value.length > 0){
+            foundItems = _.filter(visibleItems, (item) => {
+              return item.type == value;
+            });
+        }
+        let visibleElements = this.state.renderItems(foundItems);
+        this.setState({ ...this.state, visibleItems: foundItems, visibleElements: visibleElements, type: value });
         return foundItems;
       },
       shrinkDescription: () => {
@@ -55,6 +69,13 @@ class Container extends React.Component {
           return <Post key={item.id} item={item}></Post>
         })
         return visibleElements;
+      },
+      renderTypes: (typeList) => {
+        let options = typeList.map((option) => {
+          return <option value={option}>{option}</option>
+        });
+        this.setState({ ...this.state, typeOptions: options });
+        return options;
       }
     };
   }
@@ -66,12 +87,16 @@ class Container extends React.Component {
       })
       .then(
         (result) => {
+          
           this.setState({
             isLoaded: true,
             items: result,
+            typeList: [ ...new Set(result.map(item => item.type))].sort(),
+            typeOptions: this.state.renderTypes([ ...new Set(result.map(item => item.type))].sort()),
             visibleElements: this.state.renderItems(_.orderBy(result,this.state.sorter, this.state.sortOrder)),
             visibleItems: result
           });
+          this.state.shrinkDescription();
         },
         (error) => {
           this.setState({
@@ -83,7 +108,7 @@ class Container extends React.Component {
   }
 
   render () {
-    const { error, isLoaded, sortOrder } = this.state;
+    const { error, flip, isLoaded, search, searchValue, searchType, showFullDescription, shrinkDescription, sort, sorter, sortOrder, type, typeOptions, visibleElements } = this.state;
     let order = sortOrder == 'asc' ? 'v' : '^';
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -94,18 +119,24 @@ class Container extends React.Component {
         <>
           <p className="sortbuttongroup">
             Search
-            <input className="textinput" name="search" type="text" placeholder="asdfasdf" value={this.state.searchValue} onChange={this.state.search} />
+            <input className="textinput" name="search" type="text" placeholder="asdfasdf" value={searchValue} onChange={search} />
+            Type
+            <select className="dropdown" name="sort" value={type} onChange={searchType}>
+              <option value=''>All</option>
+              {typeOptions}
+            </select>
             Sort By
-            <select className="dropdown" name="sort" value={this.state.sorter} onChange={this.state.sort}>
+            <select className="dropdown" name="sort" value={sorter} onChange={sort}>
               <option value='title'>Title</option>
               <option value='created_at'>Post Date</option>
               <option value='company'>Company</option>
             </select>
-            <button className='sortbutton' name="flip" onClick={this.state.flip} value={this.state.sortOrder}>{order}</button>
-            Compact
-            <input className="checkbox" type="checkbox" name="check" value={this.state.showFullDescription} onChange={this.state.shrinkDescription} />
+            <button className='sortbutton' name="flip" onClick={flip} value={sortOrder}>{order}</button>
+            Expand
+            <input className="checkbox" type="checkbox" name="check" value={showFullDescription} onChange={shrinkDescription} />
           </p>
-          {this.state.visibleElements}
+          <h2 className="postersubtitle">{visibleElements.length} Jobs Found</h2>
+          {visibleElements}
         </>
       );
     }
